@@ -33,7 +33,7 @@ const Home = () => {
                 ([entry]) => {
                     if (entry.isIntersecting) setActiveSection(id);
                 },
-                { threshold: 0.5 }
+                { threshold: 0.15 }
             );
             observer.observe(el);
             return observer;
