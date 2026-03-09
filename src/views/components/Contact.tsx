@@ -7,14 +7,14 @@ const Contact = () => {
     const { vibe } = useTheme();
     const { identifyVisitor } = useAnalytics();
     const [isOpen, setIsOpen] = React.useState(false);
+    const [identityInput, setIdentityInput] = React.useState('');
 
     const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=elmeriotalara@gmail.com&su=&body=Hello%20Elmer,%20Good%20Day!";
     const messengerUrl = "https://m.me/dummyacctv3?text=Hello%20Elmer,%20Good%20Day!";
 
     const handleIdentityTracking = (platform: string) => {
-        // While we can't extract their actual email from clicking a link, 
-        // we log that this specific hardware fingerprint intentionally tried to contact the owner
-        identifyVisitor(`Contacted via ${platform}`);
+        const identityStr = identityInput.trim() ? `${identityInput} (via ${platform})` : `Contacted via ${platform} (No Name Given)`;
+        identifyVisitor(identityStr);
     };
 
     return (
@@ -54,7 +54,18 @@ const Contact = () => {
                         </button>
 
                         <h3 className="text-2xl font-bold text-silver mb-2 font-sans">Reach Out Directly</h3>
-                        <p className="text-slate-400 text-sm mb-8 font-mono italic">Choose your preferred channel</p>
+                        <p className="text-slate-400 text-sm mb-6 font-mono italic">Choose your preferred channel</p>
+
+                        <div className="mb-6 text-left">
+                            <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Your Name or Email (Optional)</label>
+                            <input
+                                type="text"
+                                placeholder="e.g. John Doe / john@example.com"
+                                value={identityInput}
+                                onChange={(e) => setIdentityInput(e.target.value)}
+                                className="w-full bg-navy/50 border border-theme-accent/30 rounded-lg px-4 py-3 text-sm text-silver focus:ring-1 focus:ring-theme-accent outline-none placeholder:text-slate-600 transition-all focus:bg-navy"
+                            />
+                        </div>
 
                         <div className="flex flex-col gap-4">
                             <a
