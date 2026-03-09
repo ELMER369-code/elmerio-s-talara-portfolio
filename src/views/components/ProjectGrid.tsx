@@ -1,32 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../src/lib/supabase';
+import React from 'react';
+import { useProjects } from '../src/controllers/useProjects';
 
 const ProjectGrid = () => {
-    const [projects, setProjects] = useState<any[]>([]);
-    const [filter, setFilter] = useState('All');
-    const [loading, setLoading] = useState(true);
+    const { projects, loading, error, filter, setFilter, categories } = useProjects();
 
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    const fetchProjects = async () => {
-        setLoading(true);
-        const { data, error } = await supabase
-            .from('projects')
-            .select('*')
-            .order('id', { ascending: false });
-
-        if (data) setProjects(data);
-        if (error) console.error("Error fetching projects:", error);
-        setLoading(false);
-    };
-
-    const categories = ['All', 'Software', 'Hardware', 'Embedded System'];
-
-    const filteredProjects = filter === 'All'
-        ? projects
-        : projects.filter((project: any) => project.category === filter);
+    if (error) {
+        return (
+            <section id="projects" className="py-20 container mx-auto px-6 flex justify-center items-center min-h-[400px]">
+                <div className="font-mono text-red-500 text-xl">[ ERROR: {error} ]</div>
+            </section>
+        );
+    }
 
     if (loading) {
         return (
@@ -63,7 +47,7 @@ const ProjectGrid = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredProjects.map((project: any, index: number) => (
+                {projects.map((project: any, index: number) => (
                     <div
                         key={index}
                         className="group relative bg-navy-deep border border-cyan-electric/30 hover:border-cyan-electric overflow-hidden transition-all duration-300 hover:-translate-y-2"
