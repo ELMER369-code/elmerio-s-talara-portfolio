@@ -37,11 +37,11 @@ const Home = () => {
                 className={`
                     px-6 py-2 rounded-full border transition-all duration-300 font-mono text-xs relative group
                     ${isActive
-                        ? 'border-cyan-electric text-navy bg-cyan-electric shadow-[0_0_20px_rgba(0,255,65,0.4)]'
-                        : 'border-transparent text-slate-400 hover:text-cyan-electric hover:border-cyan-electric/30'}
+                        ? 'border-green-hacker text-navy bg-green-hacker shadow-[0_0_20px_rgba(0,255,65,0.4)]'
+                        : 'border-transparent text-slate-400 hover:text-green-hacker hover:border-green-hacker/30'}
                 `}
             >
-                <span className={`${isActive ? 'text-navy/80' : 'text-cyan-electric/60'} group-hover:text-cyan-electric mr-2`}>{number}.</span>
+                <span className={`${isActive ? 'text-navy/80' : 'text-green-hacker/60'} group-hover:text-green-hacker mr-2`}>{number}.</span>
                 {label}
             </a>
         );
@@ -55,7 +55,7 @@ const Home = () => {
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     className="flex items-center gap-2 group cursor-pointer"
                 >
-                    <div className="w-11 h-11 border-2 border-cyan-electric rounded-lg overflow-hidden shadow-[0_0_15px_rgba(0,255,65,0.3)] group-hover:scale-110 transition-all duration-300 bg-navy-light">
+                    <div className="w-11 h-11 border-2 border-cyan-electric rounded-lg overflow-hidden shadow-[0_0_15px_rgba(0,242,255,0.3)] group-hover:scale-110 transition-all duration-300 bg-navy-light">
                         <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className="text-cyan-electric font-bold tracking-tighter text-lg group-hover:text-silver transition-colors">STe.</span>
@@ -69,8 +69,8 @@ const Home = () => {
                     <a
                         href="#contact"
                         className={`
-                            ml-4 px-6 py-2.5 rounded-full border-2 border-cyan-electric text-cyan-electric font-bold tracking-widest uppercase text-[10px]
-                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-cyan-electric hover:text-navy
+                            ml-4 px-6 py-2.5 rounded-full border-2 border-green-hacker text-green-hacker font-bold tracking-widest uppercase text-[10px]
+                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-green-hacker hover:text-navy
                         `}
                         style={{ animation: 'hire-me-glow 2s infinite ease-in-out' }}
                     >
