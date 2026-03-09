@@ -27,11 +27,11 @@
 
     0%,
     100% {
-      box-shadow: 0 0 5px rgba(0, 255, 65, 0.2), inset 0 0 2px rgba(0, 255, 65, 0.1);
+      box-shadow: 0 0 5px var(--glow-color-dim), inset 0 0 2px var(--glow-color-dim);
     }
 
     50% {
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.6), inset 0 0 5px rgba(0, 255, 65, 0.3);
+      box-shadow: 0 0 20px var(--glow-color), inset 0 0 5px var(--glow-color-dim);
     }
   }
 
@@ -39,16 +39,23 @@
 
     0%,
     100% {
-      box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-      border-color: rgba(0, 255, 65, 0.5);
+      box-shadow: 0 0 10px var(--glow-color-dim);
+      border-color: var(--glow-color-dim);
     }
 
     50% {
-      box-shadow: 0 0 25px rgba(0, 255, 65, 0.8);
-      border-color: #00ff41;
+      box-shadow: 0 0 25px var(--glow-color);
+      border-color: var(--accent-color);
     }
   }
 }
+
+:root {
+  --accent-color: #00f2ff;
+  --glow-color: rgba(0, 242, 255, 0.6);
+  --glow-color-dim: rgba(0, 242, 255, 0.2);
+}
+
 
 @layer base {
   body {

@@ -1,13 +1,17 @@
 import React from 'react';
 import { PROJECTS } from '../constants';
 import ProjectCard from './ProjectCard';
+import { useTheme } from '../../context/ThemeContext';
 
 const ProjectSection: React.FC = () => {
+  const { vibe } = useTheme();
+  const accentColor = vibe === 'cyan' ? 'cyan-electric' : 'green-hacker';
+
   return (
     <section id="projects" className="py-24 px-6 md:px-24 max-w-7xl mx-auto">
       <div className="flex items-center gap-4 mb-16">
         <h2 className="font-sans font-bold text-2xl md:text-3xl text-slate-lightest flex items-center gap-2">
-          <span className="font-mono text-cyan text-xl">01.</span> Some Things I've Built
+          <span className={`font-mono text-${accentColor} text-xl`}>02.</span> Some Things I've Built
         </h2>
         <div className="h-[1px] bg-navy-lighter flex-grow max-w-xs"></div>
       </div>
