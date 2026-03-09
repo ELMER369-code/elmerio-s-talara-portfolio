@@ -38,8 +38,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const AdminDashboard = () => {
     const { projects, loading, error, addProject, updateProject, deleteProject, uploadImage } = useAdminProjects();
-    const { uniqueVisitors, totalInteractions, locations, loading: analyticsLoading } = useAdminAnalytics();
-    const [activeTab, setActiveTab] = useState<'dashboard' | 'map'>('dashboard');
+    const { uniqueVisitors, totalInteractions, locations, allVisitors, loading: analyticsLoading } = useAdminAnalytics();
+    const [activeTab, setActiveTab] = useState<'dashboard' | 'map' | 'visitors'>('dashboard');
 
     const {
         vibe, setVibe,
@@ -153,6 +153,10 @@ const AdminDashboard = () => {
                         <Map size={18} />
                         <span className="font-medium text-sm">Visitors Map</span>
                     </button>
+                    <button onClick={() => setActiveTab('visitors')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg ${activeTab === 'visitors' ? `${accentColor} text-white shadow-md` : 'hover:bg-white/10 text-slate-300 hover:text-white'} transition-all`}>
+                        <Users size={18} />
+                        <span className="font-medium text-sm">Visitors List</span>
+                    </button>
                     <a href="/" target="_blank" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-slate-300 hover:text-white">
                         <ExternalLink size={18} />
                         <span className="font-medium text-sm">View Website</span>
@@ -228,10 +232,9 @@ const AdminDashboard = () => {
                     </div>
                 </header>
 
-                {/* SCROLLABLE AREA */}
                 <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
 
-                    {activeTab === 'dashboard' ? (
+                    {activeTab === 'dashboard' && (
                         <>
                             {/* STAT CARDS */}
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
@@ -450,7 +453,9 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
                         </>
-                    ) : (
+                    )}
+
+                    {activeTab === 'map' && (
                         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col h-[650px] slide-up">
                             <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
                                 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
@@ -480,6 +485,75 @@ const AdminDashboard = () => {
                                         </Marker>
                                     ))}
                                 </MapContainer>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'visitors' && (
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col slide-up">
+                            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
+                                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <Users size={20} className={accentText} />
+                                    Global Visitor Accounts
+                                </h3>
+                                <div className="text-xs font-medium text-slate-500 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+                                    {allVisitors.length} Total Unique Users
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-x-auto min-h-[500px]">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-50/80 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100">
+                                            <th className="py-4 px-6 font-semibold">Fingerprint / Email</th>
+                                            <th className="py-4 px-6 font-semibold">Location</th>
+                                            <th className="py-4 px-6 font-semibold">Hardware & Specs</th>
+                                            <th className="py-4 px-6 font-semibold text-right">Visits</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-50">
+                                        {analyticsLoading ? (
+                                            <tr><td colSpan={4} className="py-8 text-center text-slate-400 animate-pulse">Loading visitors...</td></tr>
+                                        ) : allVisitors.length === 0 ? (
+                                            <tr><td colSpan={4} className="py-8 text-center text-slate-400">No visitors found yet.</td></tr>
+                                        ) : allVisitors.map((v, i) => (
+                                            <tr key={`${v.fingerprint}-${i}`} className="hover:bg-slate-50/50 transition-colors group">
+                                                <td className="py-4 px-6">
+                                                    <div className="flex flex-col">
+                                                        <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md w-fit mb-1">{v.fingerprint.substring(0, 12)}...</span>
+                                                        {v.email ? (
+                                                            <span className="text-sm font-semibold text-emerald-600">{v.email}</span>
+                                                        ) : (
+                                                            <span className="text-xs text-slate-400 italic">Anonymous User</span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-medium text-slate-700">{v.city || 'Unknown'}, {v.country || 'Unknown'}</span>
+                                                        <span className="text-xs text-slate-500">{v.ip_address}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="text-xs text-slate-600 font-medium">{v.os} • {v.browser}</span>
+                                                        <div className="flex gap-2">
+                                                            {v.cpu_cores && <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">CPU: {v.cpu_cores}</span>}
+                                                            {v.ram_gb && <span className="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">RAM: {v.ram_gb}GB</span>}
+                                                        </div>
+                                                        {v.gpu_renderer && <span className="text-[10px] bg-slate-50 text-slate-400 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={v.gpu_renderer}>{v.gpu_renderer}</span>}
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6 text-right">
+                                                    <div className="flex flex-col items-end">
+                                                        <span className="text-sm font-bold text-slate-700">{v.visit_count}</span>
+                                                        <span className="text-[10px] text-slate-400">Last: {new Date(v.last_visit).toLocaleDateString()}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     )}

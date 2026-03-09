@@ -14,10 +14,21 @@ export interface VisitorLocation {
     email: string | null;
 }
 
+export interface VisitorRecord extends VisitorLocation {
+    fingerprint: string;
+    ip_address: string | null;
+    region: string | null;
+    os: string | null;
+    first_visit: string;
+    last_visit: string;
+    visit_count: number;
+}
+
 export const useAdminAnalytics = () => {
     const [uniqueVisitors, setUniqueVisitors] = useState<number>(0);
     const [totalInteractions, setTotalInteractions] = useState<number>(0);
     const [locations, setLocations] = useState<VisitorLocation[]>([]);
+    const [allVisitors, setAllVisitors] = useState<VisitorRecord[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchAnalytics = async () => {
@@ -52,6 +63,16 @@ export const useAdminAnalytics = () => {
                 setLocations(locData as VisitorLocation[]);
             }
 
+            // 4. Get all visitor records for the list view
+            const { data: allData, error: allErr } = await supabase
+                .from('visitors')
+                .select('*')
+                .order('last_visit', { ascending: false });
+
+            if (!allErr && allData) {
+                setAllVisitors(allData as VisitorRecord[]);
+            }
+
         } catch (err) {
             console.error('Error fetching admin analytics:', err);
         } finally {
@@ -63,5 +84,5 @@ export const useAdminAnalytics = () => {
         fetchAnalytics();
     }, []);
 
-    return { uniqueVisitors, totalInteractions, locations, loading, refresh: fetchAnalytics };
+    return { uniqueVisitors, totalInteractions, locations, allVisitors, loading, refresh: fetchAnalytics };
 };
