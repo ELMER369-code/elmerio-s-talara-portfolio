@@ -1,18 +1,69 @@
-import React from 'react';
-// @ts-ignore
-import { projects } from '../data/projects';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../src/lib/supabase';
 
 const ProjectGrid = () => {
+    const [projects, setProjects] = useState<any[]>([]);
+    const [filter, setFilter] = useState('All');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .order('id', { ascending: false });
+
+        if (data) setProjects(data);
+        if (error) console.error("Error fetching projects:", error);
+        setLoading(false);
+    };
+
+    const categories = ['All', 'Software', 'Hardware', 'Embedded System'];
+
+    const filteredProjects = filter === 'All'
+        ? projects
+        : projects.filter((project: any) => project.category === filter);
+
+    if (loading) {
+        return (
+            <section id="projects" className="py-20 container mx-auto px-6 flex justify-center items-center min-h-[400px]">
+                <div className="font-mono text-cyan-electric animate-pulse text-xl">[ LOADING DATA FROM SECURE SERVER . . . ]</div>
+            </section>
+        );
+    }
+
     return (
         <section id="projects" className="py-20 container mx-auto px-6">
-            <div className="flex items-center mb-12">
-                <span className="font-mono text-cyan-electric text-xl mr-4">02.</span>
-                <h2 className="text-2xl font-bold text-silver font-mono whitespace-nowrap">System Modules</h2>
-                <div className="h-[1px] bg-navy-deep/50 w-full ml-6 bg-gradient-to-r from-cyan-electric/30 to-transparent"></div>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">
+                <div className="flex items-center mb-6 md:mb-0">
+                    <span className="font-mono text-cyan-electric text-xl mr-4">02.</span>
+                    <h2 className="text-2xl font-bold text-silver font-mono whitespace-nowrap">My Works</h2>
+                    <div className="h-[1px] bg-navy-deep/50 w-24 ml-6 bg-gradient-to-r from-cyan-electric/30 to-transparent hidden md:block"></div>
+                </div>
+
+                {/* Filter Buttons */}
+                <div className="flex flex-wrap gap-4">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setFilter(cat)}
+                            className={`px-4 py-2 text-sm font-mono border rounded transition-all duration-300 ${filter === cat
+                                ? 'border-cyan-electric text-cyan-electric shadow-[0_0_10px_rgba(100,255,218,0.3)] bg-cyan-electric/10'
+                                : 'border-slate-700 text-slate-400 hover:text-cyan-electric hover:border-cyan-electric/50'
+                                }`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project: any, index: number) => (
+                {filteredProjects.map((project: any, index: number) => (
                     <div
                         key={index}
                         className="group relative bg-navy-deep border border-cyan-electric/30 hover:border-cyan-electric overflow-hidden transition-all duration-300 hover:-translate-y-2"

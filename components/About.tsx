@@ -29,13 +29,12 @@ const About = () => {
                     <div className="absolute inset-0 border-2 border-cyan-electric rounded translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300"></div>
                     <div className="relative bg-cyan-electric/20 rounded overflow-hidden">
                         {/* Placeholder for Profile or Tech Stack visual if needed, or just a solid block for the 'schematic' look */}
-                        <div className="aspect-square bg-navy-deep flex items-center justify-center border border-cyan-electric/50">
-                            <span className="font-mono text-cyan-electric text-xs text-center p-4">
-                                [ SYSTEM SPECIFICATIONS ]<br />
-                                &gt; HW: RISC/CISC<br />
-                                &gt; SW: JS/C++/Python<br />
-                                &gt; LOC: Bohol, PH
-                            </span>
+                        <div className="aspect-square bg-navy-deep flex items-center justify-center border border-cyan-electric/50 overflow-hidden">
+                            <img
+                                src="./assets/profile.jpg"
+                                alt="Elmerio S. Talara"
+                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                            />
                         </div>
                     </div>
                 </div>

@@ -15,8 +15,9 @@ const Hero = () => {
         Elmerio S. Talara.
       </h1>
 
-      <h2 className="font-sans text-4xl md:text-6xl font-bold text-slate-400 mb-8 max-w-2xl bg-clip-text">
-        Bridging Silicon & Software.
+      <h2 className="font-sans text-4xl md:text-6xl font-bold text-slate-400 mb-8 max-w-4xl bg-clip-text">
+        Building the Bridge Between<br />
+        <span className="text-cyan-electric">Hardware & Software.</span>
       </h2>
 
       <p className="font-sans text-slate-400 text-lg max-w-xl leading-relaxed mb-12 border-l-2 border-cyan-electric pl-6">
