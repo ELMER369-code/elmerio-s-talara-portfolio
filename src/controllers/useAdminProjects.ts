@@ -55,6 +55,7 @@ export const useAdminProjects = () => {
         addProject,
         updateProject,
         deleteProject,
+        uploadImage: ProjectModel.uploadImage,
         refresh: fetchProjects
     };
 };

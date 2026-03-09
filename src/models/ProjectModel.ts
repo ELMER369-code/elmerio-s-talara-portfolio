@@ -48,5 +48,23 @@ export const ProjectModel = {
             .delete()
             .eq('id', id);
         return { error };
+    },
+
+    async uploadImage(file: File): Promise<{ publicUrl: string | null; error: any }> {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}-${Date.now()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('project-images')
+            .upload(filePath, file);
+
+        if (uploadError) return { publicUrl: null, error: uploadError };
+
+        const { data } = supabase.storage
+            .from('project-images')
+            .getPublicUrl(filePath);
+
+        return { publicUrl: data.publicUrl, error: null };
     }
 };

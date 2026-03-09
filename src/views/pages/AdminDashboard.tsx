@@ -3,8 +3,10 @@ import { supabase } from '../../lib/supabase';
 import { useAdminProjects } from '../../controllers/useAdminProjects';
 
 const AdminDashboard = () => {
-    const { projects, loading, error, addProject, updateProject, deleteProject } = useAdminProjects();
+    const { projects, loading, error, addProject, updateProject, deleteProject, uploadImage } = useAdminProjects();
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -24,12 +26,28 @@ const AdminDashboard = () => {
     const resetForm = () => {
         setFormData({ title: '', description: '', image_url: '', tech_stack: '', category: 'Software', tag: 'Web Dev' });
         setEditingId(null);
+        setSelectedFile(null);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setUploading(true);
+
+        let finalImageUrl = formData.image_url;
+
+        if (selectedFile) {
+            const { publicUrl, error: uploadErr } = await uploadImage(selectedFile);
+            if (uploadErr) {
+                alert(`Upload failed: ${uploadErr.message}`);
+                setUploading(false);
+                return;
+            }
+            if (publicUrl) finalImageUrl = publicUrl;
+        }
+
         const formattedData = {
             ...formData,
+            image_url: finalImageUrl,
             tech_stack: formData.tech_stack.split(',').map(s => s.trim())
         };
 
@@ -38,6 +56,7 @@ const AdminDashboard = () => {
         } else {
             if (await addProject(formattedData)) resetForm();
         }
+        setUploading(false);
     };
 
     const handleEdit = (project: any) => {
@@ -50,6 +69,7 @@ const AdminDashboard = () => {
             category: project.category,
             tag: project.tag
         });
+        setSelectedFile(null);
     };
 
     return (
@@ -112,14 +132,34 @@ const AdminDashboard = () => {
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-xs font-mono text-slate-400 mb-1">IMAGE URL (REL PATH OR LINK)</label>
-                            <input
-                                type="text"
-                                className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
-                                value={formData.image_url}
-                                onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                            />
+                        <div className="space-y-2">
+                            <label className="block text-xs font-mono text-slate-400 mb-1">PROJECT IMAGE</label>
+                            <div className="flex flex-col gap-2">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                                    className="text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-mono file:bg-cyan-electric/10 file:text-cyan-electric hover:file:bg-cyan-electric/20"
+                                />
+                                <div className="text-center text-[10px] text-slate-600 font-mono">--- OR ---</div>
+                                <input
+                                    type="text"
+                                    placeholder="Paste URL if not uploading"
+                                    className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
+                                    value={formData.image_url}
+                                    onChange={e => setFormData({ ...formData, image_url: e.target.value })}
+                                />
+                            </div>
+                            {(selectedFile || formData.image_url) && (
+                                <div className="mt-2 p-2 border border-slate-800 rounded bg-navy/50">
+                                    <p className="text-[10px] font-mono text-slate-500 mb-2 uppercase">Preview:</p>
+                                    <img
+                                        src={selectedFile ? URL.createObjectURL(selectedFile) : formData.image_url}
+                                        alt="Preview"
+                                        className="h-20 w-auto rounded object-cover"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div>
@@ -134,10 +174,14 @@ const AdminDashboard = () => {
                         </div>
 
                         <div className="flex gap-4 pt-4">
-                            <button type="submit" className="flex-1 bg-cyan-electric/10 border border-cyan-electric text-cyan-electric py-2 rounded font-mono hover:bg-cyan-electric hover:text-navy transition-all">
-                                {editingId ? 'UPDATE RECORD' : 'SAVE TO DATABASE'}
+                            <button
+                                type="submit"
+                                disabled={uploading}
+                                className="flex-1 bg-cyan-electric/10 border border-cyan-electric text-cyan-electric py-2 rounded font-mono hover:bg-cyan-electric hover:text-navy transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {uploading ? 'PROCESSING...' : (editingId ? 'UPDATE RECORD' : 'SAVE TO DATABASE')}
                             </button>
-                            {editingId && (
+                            {editingId && !uploading && (
                                 <button type="button" onClick={resetForm} className="px-4 border border-slate-600 text-slate-400 rounded font-mono hover:text-silver">
                                     CANCEL
                                 </button>
