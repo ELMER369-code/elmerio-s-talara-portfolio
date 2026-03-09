@@ -9,8 +9,13 @@ if (!rootElement) {
 }
 
 const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+try {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} catch (err) {
+  console.error("Mount error:", err);
+  rootElement.innerHTML = `<div style="color: white; padding: 20px; font-family: monospace;">[ MOUNT ERROR: ${err} ]</div>`;
+}
