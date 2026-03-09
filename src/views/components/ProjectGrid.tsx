@@ -56,7 +56,7 @@ const ProjectGrid = () => {
                         <div className="relative h-48 overflow-hidden border-b border-cyan-electric/20">
                             <div className="absolute inset-0 bg-cyan-electric/20 group-hover:bg-transparent transition-all z-10 duration-300"></div>
                             <img
-                                src={project.image}
+                                src={project.image_url}
                                 alt={project.title}
                                 className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-300"
                             />
@@ -83,7 +83,7 @@ const ProjectGrid = () => {
                             </p>
 
                             <ul className="flex flex-wrap gap-3 mt-auto">
-                                {project.techStack.map((tech: string, i: number) => (
+                                {(project.tech_stack || []).map((tech: string, i: number) => (
                                     <li key={i} className="font-mono text-xs text-slate-500">
                                         {tech}
                                     </li>
