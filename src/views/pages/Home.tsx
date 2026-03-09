@@ -5,11 +5,13 @@ import ProjectGrid from '../components/ProjectGrid';
 import Skills from '../components/Skills';
 import Contact from '../components/Contact';
 import { useTheme } from '../../context/ThemeContext';
-
+import { useAnalytics } from '../../controllers/useAnalytics';
 
 const Home = () => {
     const [activeSection, setActiveSection] = useState('home');
     const { vibe } = useTheme();
+    useAnalytics(); // Initialize visitor tracking
+
     useEffect(() => {
         // Set dynamic CSS variables for global animations/effects
         const root = document.documentElement;
