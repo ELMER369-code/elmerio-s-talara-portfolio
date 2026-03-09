@@ -12,11 +12,11 @@
   --color-slate-lightest: #ccd6f6;
   --color-silver: #ccd6f6;
 
-  --color-cyan: #00f2ff;
-  /* More vibrant electric cyan */
-  --color-cyan-electric: #00f2ff;
-  --color-cyan-dim: rgba(0, 242, 255, 0.1);
-  --color-gold-premium: #ffd700;
+  --color-cyan: #00ff41;
+  /* Hacker Neon Green */
+  --color-cyan-electric: #00ff41;
+  --color-cyan-dim: rgba(0, 255, 65, 0.1);
+  --color-gold-premium: #00ff41;
 
   --font-mono: "Space Mono", "Courier Prime", monospace;
   --font-sans: "Inter", sans-serif;
@@ -25,11 +25,11 @@
 
     0%,
     100% {
-      box-shadow: 0 0 5px rgba(0, 242, 255, 0.2), inset 0 0 2px rgba(0, 242, 255, 0.1);
+      box-shadow: 0 0 5px rgba(0, 255, 65, 0.2), inset 0 0 2px rgba(0, 255, 65, 0.1);
     }
 
     50% {
-      box-shadow: 0 0 20px rgba(0, 242, 255, 0.6), inset 0 0 5px rgba(0, 242, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.6), inset 0 0 5px rgba(0, 255, 65, 0.3);
     }
   }
 
@@ -37,13 +37,13 @@
 
     0%,
     100% {
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-      border-color: rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+      border-color: rgba(0, 255, 65, 0.5);
     }
 
     50% {
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
-      border-color: #ffd700;
+      box-shadow: 0 0 25px rgba(0, 255, 65, 0.8);
+      border-color: #00ff41;
     }
   }
 }
