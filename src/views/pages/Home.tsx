@@ -33,7 +33,7 @@ const Home = () => {
             </main>
 
             <footer className="py-8 text-center font-mono text-xs text-slate-500 hover:text-cyan-electric transition-colors">
-                <a href="https://github.com/elmerio" target="_blank" rel="noreferrer">
+                <a href="https://github.com/ELMER369-code/elmerio-s-talara-portfolio" target="_blank" rel="noreferrer">
                     Designed & Built by Elmerio S. Talara
                 </a>
             </footer>
