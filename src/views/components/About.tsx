@@ -8,7 +8,7 @@ const About = () => {
     return (
         <section id="about" className="py-20 container mx-auto px-6">
             <div className="flex items-center mb-12">
-                <span={`font-mono text-${accentColor} text-xl mr-4`}>01.</span>
+                <span className={`font-mono text-${accentColor} text-xl mr-4`}>01.</span>
                 <h2 className="text-2xl font-bold text-silver font-mono whitespace-nowrap">About Me</h2>
                 <div className={`h-[1px] bg-navy-deep/50 w-full ml-6 bg-gradient-to-r from-${accentColor}/30 to-transparent`}></div>
             </div>
