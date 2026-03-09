@@ -1,8 +1,12 @@
 import React from 'react';
 import { useProjects } from '../../controllers/useProjects';
+import { useTheme } from '../../context/ThemeContext';
 
 const ProjectGrid = () => {
     const { projects, loading, error, filter, setFilter, categories } = useProjects();
+    const { vibe } = useTheme();
+    const accentColor = vibe === 'cyan' ? 'cyan-electric' : 'green-hacker';
+    const accentShadow = vibe === 'cyan' ? 'rgba(0,242,255,0.3)' : 'rgba(0,255,65,0.3)';
 
     if (error) {
         return (
@@ -15,7 +19,7 @@ const ProjectGrid = () => {
     if (loading) {
         return (
             <section id="projects" className="py-20 container mx-auto px-6 flex justify-center items-center min-h-[400px]">
-                <div className="font-mono text-cyan-electric animate-pulse text-xl">[ LOADING DATA FROM SECURE SERVER . . . ]</div>
+                <div className={`font-mono text-${accentColor} animate-pulse text-xl`}>[ LOADING DATA FROM SECURE SERVER . . . ]</div>
             </section>
         );
     }
@@ -24,9 +28,9 @@ const ProjectGrid = () => {
         <section id="projects" className="py-20 container mx-auto px-6">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12">
                 <div className="flex items-center mb-6 md:mb-0">
-                    <span className="font-mono text-cyan-electric text-xl mr-4">02.</span>
+                    <span className={`font-mono text-${accentColor} text-xl mr-4`}>02.</span>
                     <h2 className="text-2xl font-bold text-silver font-mono whitespace-nowrap">My Works</h2>
-                    <div className="h-[1px] bg-navy-deep/50 w-24 ml-6 bg-gradient-to-r from-cyan-electric/30 to-transparent hidden md:block"></div>
+                    <div className={`h-[1px] bg-navy-deep/50 w-24 ml-6 bg-gradient-to-r from-${accentColor}/30 to-transparent hidden md:block`}></div>
                 </div>
 
                 {/* Filter Buttons */}
@@ -36,8 +40,8 @@ const ProjectGrid = () => {
                             key={cat}
                             onClick={() => setFilter(cat)}
                             className={`px-4 py-2 text-sm font-mono border rounded transition-all duration-300 ${filter === cat
-                                ? 'border-cyan-electric text-cyan-electric shadow-[0_0_10px_rgba(100,255,218,0.3)] bg-cyan-electric/10'
-                                : 'border-slate-700 text-slate-400 hover:text-cyan-electric hover:border-cyan-electric/50'
+                                ? `border-${accentColor} text-${accentColor} shadow-[0_0_10px_${accentShadow}] bg-${accentColor}/10`
+                                : `border-slate-700 text-slate-400 hover:text-${accentColor} hover:border-${accentColor}/50`
                                 }`}
                         >
                             {cat}
@@ -50,11 +54,11 @@ const ProjectGrid = () => {
                 {projects.map((project: any, index: number) => (
                     <div
                         key={index}
-                        className="group relative bg-navy-deep border border-cyan-electric/30 hover:border-cyan-electric overflow-hidden transition-all duration-300 hover:-translate-y-2"
+                        className={`group relative bg-navy-deep border border-${accentColor}/30 hover:border-${accentColor} overflow-hidden transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-[0_10px_30px_-15px_rgba(2,6,23,0.7)]`}
                     >
                         {/* Image Container */}
-                        <div className="relative h-48 overflow-hidden border-b border-cyan-electric/20">
-                            <div className="absolute inset-0 bg-cyan-electric/20 group-hover:bg-transparent transition-all z-10 duration-300"></div>
+                        <div className={`relative h-48 overflow-hidden border-b border-${accentColor}/20`}>
+                            <div className={`absolute inset-0 bg-${accentColor}/20 group-hover:bg-transparent transition-all z-10 duration-300`}></div>
                             <img
                                 src={project.image_url}
                                 alt={project.title}
@@ -65,16 +69,15 @@ const ProjectGrid = () => {
                         {/* Content */}
                         <div className="p-6">
                             <div className="flex justify-between items-start mb-4">
-                                <span className="font-mono text-xs text-cyan-electric border border-cyan-electric/50 px-2 py-1 rounded">
+                                <span className={`font-mono text-xs text-${accentColor} border border-${accentColor}/50 px-2 py-1 rounded`}>
                                     {project.tag}
                                 </span>
                                 <div className="flex space-x-2 text-slate-400">
-                                    {/* Folder Icon Placeholder */}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                                 </div>
                             </div>
 
-                            <h3 className="text-xl font-bold text-silver mb-2 font-mono group-hover:text-cyan-electric transition-colors">
+                            <h3 className={`text-xl font-bold text-silver mb-2 font-mono group-hover:text-${accentColor} transition-colors`}>
                                 {project.title}
                             </h3>
 

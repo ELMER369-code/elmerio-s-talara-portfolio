@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAdminProjects } from '../../controllers/useAdminProjects';
+import { useTheme } from '../../context/ThemeContext';
 import {
     LayoutDashboard,
     Folders,
@@ -13,20 +14,26 @@ import {
     LogOut,
     Edit3,
     Trash2,
-    Palette
+    Palette,
+    Zap
 } from 'lucide-react';
+
 
 const AdminDashboard = () => {
     const { projects, loading, error, addProject, updateProject, deleteProject, uploadImage } = useAdminProjects();
+    const {
+        vibe, setVibe,
+        sidebarColor, setSidebarColor,
+        accentColor, setAccentColor
+    } = useTheme();
+
     const [editingId, setEditingId] = useState<number | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
 
-    // Theme State
-    const [sidebarColor, setSidebarColor] = useState('bg-slate-900');
-    const [accentColor, setAccentColor] = useState('bg-blue-600');
     const accentText = accentColor.replace('bg-', 'text-');
     const accentBorder = accentColor.replace('bg-', 'border-');
+
 
     // Form State
     const [formData, setFormData] = useState({
@@ -129,8 +136,29 @@ const AdminDashboard = () => {
 
                     <div className="mt-8 px-2 border-t border-white/10 pt-6">
                         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            <Palette size={14} /> Theme Colors
+                            <Zap size={14} className="text-yellow-400" /> Website Vibe
                         </p>
+                        <div className="flex gap-2 p-1 bg-black/20 rounded-lg">
+                            <button
+                                onClick={() => setVibe('cyan')}
+                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold transition-all ${vibe === 'cyan' ? 'bg-cyan-electric text-navy-deep shadow-lg scale-105' : 'text-slate-500 hover:text-slate-300'}`}
+                            >
+                                CYAN
+                            </button>
+                            <button
+                                onClick={() => setVibe('green')}
+                                className={`flex-1 py-1.5 rounded-md text-[10px] font-bold transition-all ${vibe === 'green' ? 'bg-green-hacker text-navy-deep shadow-lg scale-105' : 'text-slate-500 hover:text-slate-300'}`}
+                            >
+                                GREEN
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 px-2 border-t border-white/10 pt-6">
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <Palette size={14} /> Admin Theme
+                        </p>
+
                         <div className="space-y-3">
                             <div>
                                 <label className="text-[10px] text-slate-500 uppercase">Sidebar</label>

@@ -12,11 +12,13 @@
   --color-slate-lightest: #ccd6f6;
   --color-silver: #ccd6f6;
 
-  --color-cyan: #00ff41;
-  /* Hacker Neon Green */
-  --color-cyan-electric: #00ff41;
-  --color-cyan-dim: rgba(0, 255, 65, 0.1);
-  --color-gold-premium: #00ff41;
+  --color-cyan: #00f2ff;
+  --color-cyan-electric: #00f2ff;
+  --color-cyan-dim: rgba(0, 242, 255, 0.1);
+  --color-green-hacker: #00ff41;
+  --color-gold-premium: #ff3e3e;
+  /* Red accent for variety */
+
 
   --font-mono: "Space Mono", "Courier Prime", monospace;
   --font-sans: "Inter", sans-serif;

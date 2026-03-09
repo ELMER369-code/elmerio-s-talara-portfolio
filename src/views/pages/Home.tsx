@@ -4,9 +4,13 @@ import About from '../components/About';
 import ProjectGrid from '../components/ProjectGrid';
 import Skills from '../components/Skills';
 import Contact from '../components/Contact';
+import { useTheme } from '../../context/ThemeContext';
+
 
 const Home = () => {
     const [activeSection, setActiveSection] = useState('home');
+    const { vibe } = useTheme();
+
 
     useEffect(() => {
         const sections = ['about', 'projects', 'skills', 'contact'];
@@ -37,11 +41,11 @@ const Home = () => {
                 className={`
                     px-6 py-2 rounded-full border transition-all duration-300 font-mono text-xs relative group
                     ${isActive
-                        ? 'border-green-hacker text-navy-deep font-bold bg-green-hacker shadow-[0_0_20px_rgba(0,255,65,0.4)]'
-                        : 'border-transparent text-slate-300 hover:text-green-hacker hover:border-green-hacker/30'}
+                        ? `border-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} text-navy-deep font-bold bg-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} shadow-[0_0_20px_${vibe === 'cyan' ? 'rgba(0,242,255,0.4)' : 'rgba(0,255,65,0.4)'}]`
+                        : `border-transparent text-slate-300 hover:text-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} hover:border-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'}/30`}
                 `}
             >
-                <span className={`${isActive ? 'text-navy-deep font-extrabold' : 'text-green-hacker/60'} group-hover:text-green-hacker mr-2`}>{number}.</span>
+                <span className={`${isActive ? 'text-navy-deep font-extrabold' : `text-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'}/60`} group-hover:text-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} mr-2`}>{number}.</span>
                 {label}
             </a>
         );
@@ -70,8 +74,8 @@ const Home = () => {
                     <a
                         href="#contact"
                         className={`
-                            ml-4 px-6 py-2.5 rounded-full border-2 border-green-hacker text-green-hacker font-bold tracking-widest uppercase text-[10px]
-                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-green-hacker hover:text-navy-deep shadow-[0_0_15px_rgba(0,255,65,0.1)]
+                            ml-4 px-6 py-2.5 rounded-full border-2 border-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} text-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} font-bold tracking-widest uppercase text-[10px]
+                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-${vibe === 'cyan' ? 'cyan-electric' : 'green-hacker'} hover:text-navy-deep shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.1)' : 'rgba(0,255,65,0.1)'}]
                         `}
                         style={{ animation: 'hire-me-glow 2s infinite ease-in-out' }}
                     >
