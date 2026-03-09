@@ -54,9 +54,12 @@ const Home = () => {
             <nav className="sticky top-0 bg-navy-deep/80 backdrop-blur-xl flex justify-between items-center px-6 md:px-12 py-5 font-mono text-sm z-[100] border-b border-cyan-electric/10 shadow-[0_10px_30px_-10px_rgba(2,6,23,0.7)] transition-all duration-500">
                 <div
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="text-cyan-electric font-bold border-2 border-cyan-electric px-3 py-1 rounded-lg tracking-tighter hover:bg-cyan-electric hover:text-navy transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,242,255,0.3)]"
+                    className="flex items-center gap-2 group cursor-pointer"
                 >
-                    E.T.
+                    <div className="w-11 h-11 border-2 border-cyan-electric rounded-lg overflow-hidden shadow-[0_0_15px_rgba(0,242,255,0.3)] group-hover:scale-110 transition-all duration-300 bg-navy-light">
+                        <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-cyan-electric font-bold tracking-tighter text-lg group-hover:text-silver transition-colors">STe.</span>
                 </div>
 
                 <div className="space-x-4 hidden md:flex items-center">
