@@ -1,12 +1,21 @@
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
+import { useAnalytics } from '../../controllers/useAnalytics';
+
 const Contact = () => {
     const { vibe } = useTheme();
+    const { identifyVisitor } = useAnalytics();
     const [isOpen, setIsOpen] = React.useState(false);
 
     const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=elmeriotalara@gmail.com&su=&body=Hello%20Elmer,%20Good%20Day!";
     const messengerUrl = "https://m.me/dummyacctv3?text=Hello%20Elmer,%20Good%20Day!";
+
+    const handleIdentityTracking = (platform: string) => {
+        // While we can't extract their actual email from clicking a link, 
+        // we log that this specific hardware fingerprint intentionally tried to contact the owner
+        identifyVisitor(`Contacted via ${platform}`);
+    };
 
     return (
         <section id="contact" className="py-20 container mx-auto px-6 text-center max-w-4xl relative">
@@ -52,6 +61,7 @@ const Contact = () => {
                                 href={messengerUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => handleIdentityTracking('Messenger')}
                                 className="flex items-center justify-center gap-4 bg-[#00B2FF]/10 text-[#00B2FF] border border-[#00B2FF]/30 py-4 rounded-lg font-mono text-lg hover:bg-[#00B2FF]/20 transition-all group relative overflow-hidden"
                             >
                                 <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -64,6 +74,7 @@ const Contact = () => {
                                 href={gmailUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => handleIdentityTracking('Gmail')}
                                 className="flex items-center justify-center gap-4 bg-[#EA4335]/10 text-[#EA4335] border border-[#EA4335]/30 py-4 rounded-lg font-mono text-lg hover:bg-[#EA4335]/20 transition-all group"
                             >
                                 <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">

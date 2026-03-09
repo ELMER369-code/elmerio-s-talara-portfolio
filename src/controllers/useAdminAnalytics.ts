@@ -8,6 +8,10 @@ export interface VisitorLocation {
     city: string | null;
     country: string | null;
     browser: string | null;
+    cpu_cores: number | null;
+    ram_gb: number | null;
+    gpu_renderer: string | null;
+    email: string | null;
 }
 
 export const useAdminAnalytics = () => {
@@ -40,7 +44,7 @@ export const useAdminAnalytics = () => {
             // 3. Get locations for the map
             const { data: locData, error: locErr } = await supabase
                 .from('visitors')
-                .select('id, latitude, longitude, city, country, browser')
+                .select('id, latitude, longitude, city, country, browser, cpu_cores, ram_gb, gpu_renderer, email')
                 .not('latitude', 'is', null)
                 .not('longitude', 'is', null);
 

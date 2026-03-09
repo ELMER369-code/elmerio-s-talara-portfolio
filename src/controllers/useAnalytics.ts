@@ -21,15 +21,34 @@ export const useAnalytics = () => {
                 // Check if session is already recorded to avoid spamming the DB
                 const hasLoggedSession = sessionStorage.getItem('has_logged_session');
 
+                // Helper to get WebGL GPU info
+                const getGPU = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                        if (gl) {
+                            // @ts-ignore
+                            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                            // @ts-ignore
+                            return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : null;
+                        }
+                    } catch (e) { return null; }
+                    return null;
+                };
+
                 if (!hasLoggedSession) {
                     sessionStorage.setItem('has_logged_session', 'true');
 
-                    // 2. Get Location
+                    // 2. Get Location & Hardware Specs
                     let loc = null;
                     try {
                         const locRes = await fetch('https://ipapi.co/json/');
                         if (locRes.ok) loc = await locRes.json();
                     } catch (e) { console.error('Location fetch failed', e); }
+
+                    const cpuCores = navigator.hardwareConcurrency || null;
+                    const ramGb = (navigator as any).deviceMemory || null;
+                    const gpuRenderer = getGPU();
 
                     // 3. Upsert visitor in Supabase
                     const { data: existingVisitor } = await supabase
@@ -47,6 +66,9 @@ export const useAnalytics = () => {
                             region: loc?.region || null,
                             latitude: loc?.latitude || null,
                             longitude: loc?.longitude || null,
+                            cpu_cores: cpuCores,
+                            ram_gb: ramGb,
+                            gpu_renderer: gpuRenderer,
                             last_visit: new Date().toISOString(),
                             visit_count: (existingVisitor.visit_count || 1) + 1
                         }).eq('id', existingVisitor.id);
@@ -62,6 +84,9 @@ export const useAnalytics = () => {
                             region: loc?.region || null,
                             latitude: loc?.latitude || null,
                             longitude: loc?.longitude || null,
+                            cpu_cores: cpuCores,
+                            ram_gb: ramGb,
+                            gpu_renderer: gpuRenderer,
                             browser: browserDetails,
                             os: window.navigator.platform
                         }]);
@@ -96,5 +121,22 @@ export const useAnalytics = () => {
         }
     };
 
-    return { trackInteraction, visitorId };
+    /**
+     * Links an email address to the current visitor's fingerprint in the database.
+     */
+    const identifyVisitor = async (email: string) => {
+        if (!visitorId || !email) return;
+        try {
+            await supabase
+                .from('visitors')
+                .update({ email: email })
+                .eq('fingerprint', visitorId);
+
+            await trackInteraction('email_provided', { email });
+        } catch (err) {
+            console.error('Failed to link identity', err);
+        }
+    };
+
+    return { trackInteraction, identifyVisitor, visitorId };
 };

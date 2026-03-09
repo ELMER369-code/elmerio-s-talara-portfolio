@@ -471,7 +471,11 @@ const AdminDashboard = () => {
                                         <Marker key={`${loc.id}-${i}`} position={[loc.latitude, loc.longitude]}>
                                             <Popup>
                                                 <b>{loc.city || 'Unknown City'}, {loc.country || 'Unknown Location'}</b><br />
-                                                Browser: {loc.browser || 'Unknown'}
+                                                Browser: {loc.browser || 'Unknown'}<br />
+                                                {loc.cpu_cores && <>CPU Cores: {loc.cpu_cores}<br /></>}
+                                                {loc.ram_gb && <>RAM: {loc.ram_gb}GB<br /></>}
+                                                {loc.gpu_renderer && <><span title={loc.gpu_renderer} className="truncate block max-w-[150px]">GPU: {loc.gpu_renderer.split(' ').slice(0, 3).join(' ')}</span></>}
+                                                {loc.email && <b className="text-emerald-600 mt-1 block border-t pt-1">{loc.email}</b>}
                                             </Popup>
                                         </Marker>
                                     ))}
