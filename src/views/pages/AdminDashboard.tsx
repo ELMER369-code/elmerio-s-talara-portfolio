@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAdminProjects } from '../../controllers/useAdminProjects';
+import {
+    LayoutDashboard,
+    Folders,
+    Settings,
+    ExternalLink,
+    Users,
+    ShoppingBag,
+    DollarSign,
+    FileText,
+    LogOut,
+    Edit3,
+    Trash2,
+    Palette
+} from 'lucide-react';
 
 const AdminDashboard = () => {
     const { projects, loading, error, addProject, updateProject, deleteProject, uploadImage } = useAdminProjects();
     const [editingId, setEditingId] = useState<number | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
+
+    // Theme State
+    const [sidebarColor, setSidebarColor] = useState('bg-slate-900');
+    const [accentColor, setAccentColor] = useState('bg-blue-600');
+    const accentText = accentColor.replace('bg-', 'text-');
+    const accentBorder = accentColor.replace('bg-', 'border-');
 
     // Form State
     const [formData, setFormData] = useState({
@@ -70,146 +90,336 @@ const AdminDashboard = () => {
             tag: project.tag
         });
         setSelectedFile(null);
+        // Scroll to form
+        document.getElementById('edit-form')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
-        <div className="min-h-screen bg-navy p-4 md:p-8 font-sans text-silver selection:bg-cyan-electric selection:text-navy-deep">
-            <header className="flex justify-between items-center mb-8 border-b border-cyan-electric/20 pb-4">
-                <h1 className="text-2xl font-mono text-cyan-electric">ADMIN CONTROL PANEL</h1>
-                <button onClick={handleLogout} className="text-xs font-mono text-slate-400 hover:text-red-500 transition-colors uppercase">[ Terminate Session ]</button>
-            </header>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Editor Form */}
-                <section className="bg-navy-light p-6 rounded border border-cyan-electric/10 h-fit">
-                    <h2 className="text-lg font-mono text-silver mb-6 flex items-center">
-                        <span className="w-2 h-2 bg-cyan-electric rounded-full mr-3 animate-pulse"></span>
-                        {editingId ? 'Edit Project' : 'Add New Project'}
-                    </h2>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-mono text-slate-400 mb-1">PROJECT TITLE</label>
-                            <input
-                                type="text"
-                                required
-                                className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm focus:border-cyan-electric outline-none"
-                                value={formData.title}
-                                onChange={e => setFormData({ ...formData, title: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-xs font-mono text-slate-400 mb-1">CATEGORY</label>
-                                <select
-                                    className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
-                                    value={formData.category}
-                                    onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                >
-                                    <option>Software</option>
-                                    <option>Hardware</option>
-                                    <option>Embedded System</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-mono text-slate-400 mb-1">TAG (SHORT)</label>
-                                <input
-                                    type="text"
-                                    className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
-                                    value={formData.tag}
-                                    onChange={e => setFormData({ ...formData, tag: e.target.value })}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-xs font-mono text-slate-400 mb-1">DESCRIPTION</label>
-                            <textarea
-                                className="w-full bg-navy border border-slate-700 rounded px-3 py-6 text-sm outline-none"
-                                value={formData.description}
-                                onChange={e => setFormData({ ...formData, description: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-xs font-mono text-slate-400 mb-1">PROJECT IMAGE</label>
-                            <div className="flex flex-col gap-2">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
-                                    className="text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-mono file:bg-cyan-electric/10 file:text-cyan-electric hover:file:bg-cyan-electric/20"
-                                />
-                                <div className="text-center text-[10px] text-slate-600 font-mono">--- OR ---</div>
-                                <input
-                                    type="text"
-                                    placeholder="Paste URL if not uploading"
-                                    className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
-                                    value={formData.image_url}
-                                    onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                                />
-                            </div>
-                            {(selectedFile || formData.image_url) && (
-                                <div className="mt-2 p-2 border border-slate-800 rounded bg-navy/50">
-                                    <p className="text-[10px] font-mono text-slate-500 mb-2 uppercase">Preview:</p>
-                                    <img
-                                        src={selectedFile ? URL.createObjectURL(selectedFile) : formData.image_url}
-                                        alt="Preview"
-                                        className="h-20 w-auto rounded object-cover"
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div>
-                            <label className="block text-xs font-mono text-slate-400 mb-1">TECH STACK (COMMA SEPARATED)</label>
-                            <input
-                                type="text"
-                                placeholder="React, Typescript, IoT, etc"
-                                className="w-full bg-navy border border-slate-700 rounded px-3 py-2 text-sm outline-none"
-                                value={formData.tech_stack}
-                                onChange={e => setFormData({ ...formData, tech_stack: e.target.value })}
-                            />
-                        </div>
-
-                        <div className="flex gap-4 pt-4">
-                            <button
-                                type="submit"
-                                disabled={uploading}
-                                className="flex-1 bg-cyan-electric/10 border border-cyan-electric text-cyan-electric py-2 rounded font-mono hover:bg-cyan-electric hover:text-navy transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {uploading ? 'PROCESSING...' : (editingId ? 'UPDATE RECORD' : 'SAVE TO DATABASE')}
-                            </button>
-                            {editingId && !uploading && (
-                                <button type="button" onClick={resetForm} className="px-4 border border-slate-600 text-slate-400 rounded font-mono hover:text-silver">
-                                    CANCEL
-                                </button>
-                            )}
-                        </div>
-                    </form>
-                </section>
-
-                {/* List of Projects */}
-                <section>
-                    <h2 className="text-lg font-mono text-silver mb-6 px-2">Project Registry</h2>
-                    <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar">
-                        {loading ? <div className="text-cyan-electric animate-pulse font-mono">[ LOADING... ]</div> :
-                            projects.map(p => (
-                                <div key={p.id} className="bg-navy-light p-4 rounded border border-slate-800 flex justify-between items-center group">
-                                    <div>
-                                        <h3 className="text-silver font-bold text-sm">{p.title}</h3>
-                                        <p className="text-xs text-slate-500 font-mono italic">{p.category} | {p.tag}</p>
-                                    </div>
-                                    <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onClick={() => handleEdit(p)} className="text-xs text-cyan-electric font-mono hover:underline">EDIT</button>
-                                        <button onClick={() => deleteProject(p.id)} className="text-xs text-red-400 font-mono hover:underline">DELETE</button>
-                                    </div>
-                                </div>
-                            ))}
+        <div className="flex h-screen bg-slate-50 font-sans text-slate-800">
+            {/* SIDEBAR */}
+            <aside className={`w-64 flex-shrink-0 flex flex-col transition-colors duration-300 ${sidebarColor} text-slate-100 hidden md:flex z-20`}>
+                <div className="p-6 flex items-center gap-3 border-b border-white/10">
+                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden p-1">
+                        <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-contain" />
                     </div>
-                </section>
+                    <div>
+                        <h2 className="font-bold text-lg leading-tight">Admin</h2>
+                        <p className="text-xs text-slate-400">Control Panel</p>
+                    </div>
+                </div>
+
+                <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
+                    <p className="px-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Main</p>
+                    <a href="#" className={`flex items-center gap-3 px-4 py-3 rounded-lg ${accentColor} text-white transition-colors`}>
+                        <LayoutDashboard size={18} />
+                        <span className="font-medium text-sm">Dashboard</span>
+                    </a>
+
+                    <p className="px-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-6 mb-2">Content</p>
+                    <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-slate-300 hover:text-white">
+                        <Folders size={18} />
+                        <span className="font-medium text-sm">Projects</span>
+                    </a>
+
+                    <p className="px-2 text-xs font-semibold text-slate-400 uppercase tracking-wider mt-6 mb-2">System</p>
+                    <a href="/" target="_blank" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-slate-300 hover:text-white">
+                        <ExternalLink size={18} />
+                        <span className="font-medium text-sm">View Website</span>
+                    </a>
+
+                    <div className="mt-8 px-2 border-t border-white/10 pt-6">
+                        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <Palette size={14} /> Theme Colors
+                        </p>
+                        <div className="space-y-3">
+                            <div>
+                                <label className="text-[10px] text-slate-500 uppercase">Sidebar</label>
+                                <div className="flex gap-2 mt-1">
+                                    <button onClick={() => setSidebarColor('bg-slate-900')} className="w-6 h-6 rounded-full bg-slate-900 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                    <button onClick={() => setSidebarColor('bg-blue-950')} className="w-6 h-6 rounded-full bg-blue-950 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                    <button onClick={() => setSidebarColor('bg-indigo-950')} className="w-6 h-6 rounded-full bg-indigo-950 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-[10px] text-slate-500 uppercase">Accent</label>
+                                <div className="flex gap-2 mt-1">
+                                    <button onClick={() => setAccentColor('bg-blue-600')} className="w-6 h-6 rounded-full bg-blue-600 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                    <button onClick={() => setAccentColor('bg-red-500')} className="w-6 h-6 rounded-full bg-red-500 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                    <button onClick={() => setAccentColor('bg-emerald-500')} className="w-6 h-6 rounded-full bg-emerald-500 border-2 border-white/20 hover:scale-110 transition-transform"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+
+            {/* MAIN CONTENT */}
+            <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+                {/* TOP BAR */}
+                <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
+                    <h1 className="text-xl font-bold flex items-center gap-2">
+                        <LayoutDashboard className={accentText} />
+                        Dashboard Overview
+                    </h1>
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50">
+                            <div className={`w-8 h-8 rounded-full ${accentColor} text-white flex items-center justify-center font-bold text-sm`}>A</div>
+                            <span className="text-sm font-medium text-slate-600 mr-2">admin</span>
+                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            title="Logout"
+                        >
+                            <LogOut size={20} />
+                        </button>
+                    </div>
+                </header>
+
+                {/* SCROLLABLE AREA */}
+                <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+
+                    {/* STAT CARDS */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                        {/* Dummy Stats matching screenshot */}
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-5 slide-up" style={{ animationDelay: '0ms' }}>
+                            <div className="w-14 h-14 rounded-full bg-indigo-500/10 text-indigo-500 flex items-center justify-center text-2xl">
+                                <Users size={28} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Unique Visitors</p>
+                                <p className="text-3xl font-extrabold text-slate-800">1,204</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-5 slide-up" style={{ animationDelay: '100ms' }}>
+                            <div className="w-14 h-14 rounded-full bg-orange-500/10 text-orange-500 flex items-center justify-center text-2xl">
+                                <ShoppingBag size={28} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Interactions</p>
+                                <p className="text-3xl font-extrabold text-slate-800">42</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-5 slide-up" style={{ animationDelay: '200ms' }}>
+                            <div className="w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-2xl">
+                                <DollarSign size={28} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Est. Value Added</p>
+                                <p className="text-3xl font-extrabold text-slate-800">$45K</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-5 slide-up" style={{ animationDelay: '300ms' }}>
+                            <div className={`w-14 h-14 rounded-full ${accentColor}/10 ${accentText} flex items-center justify-center text-2xl`}>
+                                <FileText size={28} />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Projects</p>
+                                <p className="text-3xl font-extrabold text-slate-800">{projects.length}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                        {/* PROJECT LIST MATRIX (TABLE STYLE) */}
+                        <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col slide-up" style={{ animationDelay: '400ms' }}>
+                            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <Folders size={20} className={accentText} />
+                                    Project Registry
+                                </h3>
+                                <button className="px-3 py-1 bg-slate-100 text-slate-600 rounded text-xs font-medium hover:bg-slate-200 transition-colors">View All</button>
+                            </div>
+
+                            <div className="flex-1 overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-50/80 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100">
+                                            <th className="py-4 px-6 font-semibold">Project Title</th>
+                                            <th className="py-4 px-6 font-semibold hidden md:table-cell">Category</th>
+                                            <th className="py-4 px-6 font-semibold hidden sm:table-cell">Tag</th>
+                                            <th className="py-4 px-6 font-semibold text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-50">
+                                        {loading ? (
+                                            <tr><td colSpan={4} className="py-8 text-center text-slate-400 animate-pulse">Loading projects...</td></tr>
+                                        ) : projects.length === 0 ? (
+                                            <tr><td colSpan={4} className="py-8 text-center text-slate-400">No projects found.</td></tr>
+                                        ) : projects.map((p) => (
+                                            <tr key={p.id} className="hover:bg-slate-50/50 transition-colors group">
+                                                <td className="py-4 px-6">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-8 h-8 rounded-full ${accentColor}/10 ${accentText} flex items-center justify-center font-bold text-xs shrink-0`}>
+                                                            {p.title.charAt(0).toUpperCase()}
+                                                        </div>
+                                                        <span className="font-semibold text-slate-700">{p.title}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4 px-6 hidden md:table-cell">
+                                                    <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-xs font-medium">
+                                                        {p.category}
+                                                    </span>
+                                                </td>
+                                                <td className="py-4 px-6 hidden sm:table-cell font-mono text-xs text-slate-500">
+                                                    {p.tag}
+                                                </td>
+                                                <td className="py-4 px-6 text-right">
+                                                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button onClick={() => handleEdit(p)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded transition-colors" title="Edit">
+                                                            <Edit3 size={16} />
+                                                        </button>
+                                                        <button onClick={() => deleteProject(p.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete">
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* QUICK ACTIONS / EDIT FORM */}
+                        <div id="edit-form" className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden slide-up h-fit" style={{ animationDelay: '500ms' }}>
+                            <div className="p-6 border-b border-slate-100 bg-white">
+                                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                    <Edit3 size={20} className={accentText} />
+                                    {editingId ? 'Edit Project' : 'Quick Actions'}
+                                </h3>
+                                <p className="text-xs text-slate-500 mt-1">Manage project details and database records.</p>
+                            </div>
+
+                            <div className="p-6 bg-slate-50/30">
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1.5">Project Title</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                            value={formData.title}
+                                            onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1.5">Category</label>
+                                            <select
+                                                className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                                value={formData.category}
+                                                onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                            >
+                                                <option>Software</option>
+                                                <option>Hardware</option>
+                                                <option>Embedded System</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1.5">Tag (Short)</label>
+                                            <input
+                                                type="text"
+                                                className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                                value={formData.tag}
+                                                onChange={e => setFormData({ ...formData, tag: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1.5">Description</label>
+                                        <textarea
+                                            className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-3 text-sm h-24 resize-none focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                            value={formData.description}
+                                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1.5">Project Image</label>
+                                        <div className="p-4 border border-dashed border-slate-300 rounded-lg bg-white relative hover:bg-slate-50 transition-colors">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={e => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            />
+                                            <div className="flex flex-col items-center justify-center text-center">
+                                                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+                                                    <FileText size={20} />
+                                                </div>
+                                                <p className="text-sm font-medium text-slate-700">Click to upload image</p>
+                                                <p className="text-xs text-slate-500 mt-1">or drag and drop here</p>
+                                                {selectedFile && <p className="text-xs text-emerald-600 font-medium mt-2">Selected: {selectedFile.name}</p>}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center my-3">
+                                            <div className="flex-1 border-t border-slate-200"></div>
+                                            <span className="px-3 text-[10px] font-bold text-slate-400 uppercase">OR URL</span>
+                                            <div className="flex-1 border-t border-slate-200"></div>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Paste image URL here"
+                                            className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                            value={formData.image_url}
+                                            onChange={e => setFormData({ ...formData, image_url: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 mb-1.5">Tech Stack (comma separated)</label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. React, Typescript, Node.js"
+                                            className={`w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-${accentColor.split('-')[1]}-500/20 focus:${accentBorder} outline-none transition-all`}
+                                            value={formData.tech_stack}
+                                            onChange={e => setFormData({ ...formData, tech_stack: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div className="pt-2 flex gap-3">
+                                        <button
+                                            type="submit"
+                                            disabled={uploading}
+                                            className={`flex-1 ${accentColor} text-white font-medium py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50`}
+                                        >
+                                            {uploading ? 'Processing...' : (editingId ? 'Update Record' : 'Save Project')}
+                                        </button>
+                                        {editingId && !uploading && (
+                                            <button
+                                                type="button"
+                                                onClick={resetForm}
+                                                className="px-4 py-2.5 bg-white border border-slate-200 text-slate-600 font-medium rounded-lg hover:bg-slate-50 transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                        )}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
             </div>
+
+            {/* Simple slide up animation for main content elements */}
+            <style>{`
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .slide-up {
+                    opacity: 0;
+                    animation: slideUp 0.5s ease-out forwards;
+                }
+            `}</style>
         </div>
     );
 };
