@@ -2,7 +2,7 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex flex-col justify-center items-start container mx-auto px-6 py-20 relative overflow-hidden">
+    <section id="home" className="min-h-screen flex flex-col justify-center items-start container mx-auto px-6 py-20 relative overflow-hidden">
       {/* Schematic Lines Background Decoration */}
       <div className="absolute top-0 right-0 w-1/2 h-full border-r border-cyan-electric/10 pointer-events-none opacity-20 transform skew-x-12"></div>
       <div className="absolute bottom-10 left-10 w-20 h-20 border-l border-b border-cyan-electric/30 pointer-events-none"></div>

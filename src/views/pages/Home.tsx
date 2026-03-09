@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import ProjectGrid from '../components/ProjectGrid';
@@ -6,20 +6,73 @@ import Skills from '../components/Skills';
 import Contact from '../components/Contact';
 
 const Home = () => {
+    const [activeSection, setActiveSection] = useState('home');
+
+    useEffect(() => {
+        const sections = ['about', 'projects', 'skills', 'contact'];
+        const observers = sections.map(id => {
+            const el = document.getElementById(id);
+            if (!el) return null;
+
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) setActiveSection(id);
+                },
+                { threshold: 0.5 }
+            );
+            observer.observe(el);
+            return observer;
+        });
+
+        return () => observers.forEach(obs => obs?.disconnect());
+    }, []);
+
+    const NavLink = ({ href, label, number }: { href: string, label: string, number: string }) => {
+        const id = href.replace('#', '');
+        const isActive = activeSection === id;
+
+        return (
+            <a
+                href={href}
+                className={`
+                    px-6 py-2 rounded-full border transition-all duration-500 font-mono text-xs relative group
+                    ${isActive
+                        ? 'border-cyan-electric text-cyan-electric bg-cyan-electric/5'
+                        : 'border-transparent text-slate-400 hover:text-silver hover:border-navy-lighter'}
+                `}
+                style={isActive ? { animation: 'nav-glow 3s infinite ease-in-out' } : {}}
+            >
+                <span className="text-cyan-electric/60 group-hover:text-cyan-electric mr-2">{number}.</span>
+                {label}
+            </a>
+        );
+    };
+
     return (
-        <>
-            {/* Top Navigation Bar (Simplistic) */}
-            <nav className="sticky top-0 bg-navy-deep/90 backdrop-blur-md flex justify-between items-center px-10 py-6 font-mono text-sm z-50 border-b border-navy-light shadow-lg transition-all duration-300">
-                <div className="text-cyan-electric font-bold border border-cyan-electric p-2">E.T.</div>
-                <div className="space-x-8 hidden md:flex items-center">
-                    <a href="#about" className="hover:text-cyan-electric transition-colors">01. About</a>
-                    <a href="#projects" className="hover:text-cyan-electric transition-colors">02. Projects</a>
-                    <a href="#skills" className="hover:text-cyan-electric transition-colors">03. Skills</a>
+        <div className="bg-navy-deep min-h-screen">
+            {/* Top Navigation Bar (Enhanced) */}
+            <nav className="sticky top-0 bg-navy-deep/80 backdrop-blur-xl flex justify-between items-center px-6 md:px-12 py-5 font-mono text-sm z-[100] border-b border-cyan-electric/10 shadow-[0_10px_30px_-10px_rgba(2,6,23,0.7)] transition-all duration-500">
+                <div
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    className="text-cyan-electric font-bold border-2 border-cyan-electric px-3 py-1 rounded-lg tracking-tighter hover:bg-cyan-electric hover:text-navy transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,242,255,0.3)]"
+                >
+                    E.T.
+                </div>
+
+                <div className="space-x-4 hidden md:flex items-center">
+                    <NavLink href="#about" label="About" number="01" />
+                    <NavLink href="#projects" label="Projects" number="02" />
+                    <NavLink href="#skills" label="Skills" number="03" />
+
                     <a
                         href="#contact"
-                        className="px-4 py-2 border border-cyan-electric text-cyan-electric rounded hover:bg-cyan-electric/10 transition-all duration-300"
+                        className={`
+                            ml-4 px-6 py-2.5 rounded-full border-2 border-gold-premium text-gold-premium font-bold tracking-widest uppercase text-[10px]
+                            transition-all duration-300 hover:scale-105 active:scale-95
+                        `}
+                        style={{ animation: 'hire-me-glow 2s infinite ease-in-out' }}
                     >
-                        04. Contact
+                        04. Hire Me
                     </a>
                 </div>
             </nav>
@@ -37,7 +90,7 @@ const Home = () => {
                     Designed & Built by Elmerio S. Talara
                 </a>
             </footer>
-        </>
+        </div>
     );
 };
 

@@ -3,8 +3,8 @@ import React from 'react';
 const Contact = () => {
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=elmeriotalara@gmail.com&su=&body=Hello%20Elmer,%20Good!";
-    const messengerUrl = "https://m.me/dummyacctv3?text=Hello%20Elmer,%20Good!";
+    const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=elmeriotalara@gmail.com&su=&body=Hello%20Elmer,%20Good%20Day!";
+    const messengerUrl = "https://m.me/dummyacctv3?text=Hello%20Elmer,%20Good%20Day!";
 
     return (
         <section id="contact" className="py-20 container mx-auto px-6 text-center max-w-4xl relative">
@@ -72,7 +72,7 @@ const Contact = () => {
                         </div>
 
                         <div className="mt-8 pt-4 border-t border-cyan-electric/10 text-xs text-slate-500 font-mono italic">
-                            Pre-filled message: "Hello Elmer, Good!"
+                            Pre-filled message: "Hello Elmer, Good Day!"
                         </div>
                     </div>
                 </div>
