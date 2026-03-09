@@ -3,7 +3,6 @@ import { useTheme } from '../../context/ThemeContext';
 
 const Contact = () => {
     const { vibe } = useTheme();
-    const accentColor = vibe === 'cyan' ? 'cyan-electric' : 'green-hacker';
     const [isOpen, setIsOpen] = React.useState(false);
 
     const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=elmeriotalara@gmail.com&su=&body=Hello%20Elmer,%20Good%20Day!";
@@ -11,7 +10,7 @@ const Contact = () => {
 
     return (
         <section id="contact" className="py-20 container mx-auto px-6 text-center max-w-4xl relative">
-            <p className={`font-mono text-${accentColor} text-lg mb-4`}>
+            <p className={`font-mono text-theme-accent text-lg mb-4`}>
                 04. What's Next?
             </p>
 
@@ -25,7 +24,7 @@ const Contact = () => {
 
             <button
                 onClick={() => setIsOpen(true)}
-                className={`inline-block font-mono text-${accentColor} border border-${accentColor} px-8 py-4 rounded hover:bg-${accentColor}/10 transition-all duration-300 shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.1)' : 'rgba(0,255,65,0.1)'}]`}
+                className={`inline-block font-mono text-theme-accent border border-theme-accent px-8 py-4 rounded hover:bg-theme-accent/10 transition-all duration-300 shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.1)' : 'rgba(0,255,65,0.1)'}]`}
             >
                 Say Hello
             </button>
@@ -33,11 +32,11 @@ const Contact = () => {
             {/* Modal Overlay */}
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-navy/90 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className={`relative w-full max-w-md bg-navy-light border border-${accentColor}/30 rounded-xl shadow-2xl p-8 animate-in zoom-in duration-300`}>
+                    <div className={`relative w-full max-w-md bg-navy-light border border-theme-accent/30 rounded-xl shadow-2xl p-8 animate-in zoom-in duration-300`}>
                         {/* Close Button "X" */}
                         <button
                             onClick={() => setIsOpen(false)}
-                            className={`absolute -top-3 -right-3 w-8 h-8 bg-navy border border-${accentColor}/50 text-${accentColor} rounded-full flex items-center justify-center hover:bg-${accentColor} hover:text-navy transition-all z-[110] shadow-lg`}
+                            className={`absolute -top-3 -right-3 w-8 h-8 bg-navy border border-theme-accent/50 text-theme-accent rounded-full flex items-center justify-center hover:bg-theme-accent hover:text-navy transition-all z-[110] shadow-lg`}
                             title="Close"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +73,7 @@ const Contact = () => {
                             </a>
                         </div>
 
-                        <div className={`mt-8 pt-4 border-t border-${accentColor}/10 text-xs text-slate-500 font-mono italic`}>
+                        <div className={`mt-8 pt-4 border-t border-theme-accent/10 text-xs text-slate-500 font-mono italic`}>
                             Pre-filled message: "Hello Elmer, Good Day!"
                         </div>
                     </div>

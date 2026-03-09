@@ -10,9 +10,6 @@ import { useTheme } from '../../context/ThemeContext';
 const Home = () => {
     const [activeSection, setActiveSection] = useState('home');
     const { vibe } = useTheme();
-    const accentColor = vibe === 'cyan' ? 'cyan-electric' : 'green-hacker';
-
-
     useEffect(() => {
         // Set dynamic CSS variables for global animations/effects
         const root = document.documentElement;
@@ -55,11 +52,11 @@ const Home = () => {
                 className={`
                     px-6 py-2 rounded-full border transition-all duration-300 font-mono text-xs relative group
                     ${isActive
-                        ? `border-${accentColor} text-navy-deep font-bold bg-${accentColor} shadow-[0_0_20px_${vibe === 'cyan' ? 'rgba(0,242,255,0.4)' : 'rgba(0,255,65,0.4)'}]`
-                        : `border-transparent text-slate-300 hover:text-${accentColor} hover:border-${accentColor}/30`}
+                        ? `border-theme-accent text-navy-deep font-bold bg-theme-accent shadow-[0_0_20px_${vibe === 'cyan' ? 'rgba(0,242,255,0.4)' : 'rgba(0,255,65,0.4)'}]`
+                        : `border-transparent text-slate-300 hover:text-theme-accent hover:border-theme-accent/30`}
                 `}
             >
-                <span className={`${isActive ? 'text-navy-deep font-extrabold' : `text-${accentColor}/60`} group-hover:text-${accentColor} mr-2`}>{number}.</span>
+                <span className={`${isActive ? 'text-navy-deep font-extrabold' : `text-theme-accent/60`} group-hover:text-theme-accent mr-2`}>{number}.</span>
                 {label}
             </a>
         );
@@ -69,15 +66,15 @@ const Home = () => {
     return (
         <div className="bg-navy-deep min-h-screen">
             {/* Top Navigation Bar (Enhanced) */}
-            <nav className={`sticky top-0 bg-navy-deep/90 backdrop-blur-xl flex justify-between items-center px-6 md:px-12 py-5 font-mono text-sm z-[100] border-b border-${accentColor}/20 shadow-[0_10px_30px_-10px_rgba(2,6,23,0.9)] transition-all duration-500`}>
+            <nav className={`sticky top-0 bg-navy-deep/90 backdrop-blur-xl flex justify-between items-center px-6 md:px-12 py-5 font-mono text-sm z-[100] border-b border-theme-accent/20 shadow-[0_10px_30px_-10px_rgba(2,6,23,0.9)] transition-all duration-500`}>
                 <div
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     className="flex items-center gap-2 group cursor-pointer"
                 >
-                    <div className={`w-11 h-11 border-2 border-${accentColor} rounded-lg overflow-hidden shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.3)' : 'rgba(0,255,65,0.3)'}] group-hover:scale-110 transition-all duration-300 bg-navy-light`}>
+                    <div className={`w-11 h-11 border-2 border-theme-accent rounded-lg overflow-hidden shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.3)' : 'rgba(0,255,65,0.3)'}] group-hover:scale-110 transition-all duration-300 bg-navy-light`}>
                         <img src="/assets/logo.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
-                    <span className={`text-${accentColor} font-bold tracking-tighter text-lg group-hover:text-silver transition-colors`}>STe.</span>
+                    <span className={`text-theme-accent font-bold tracking-tighter text-lg group-hover:text-silver transition-colors`}>STe.</span>
                 </div>
 
                 <div className="space-x-4 hidden md:flex items-center">
@@ -88,8 +85,8 @@ const Home = () => {
                     <a
                         href="#contact"
                         className={`
-                            ml-4 px-6 py-2.5 rounded-full border-2 border-${accentColor} text-${accentColor} font-bold tracking-widest uppercase text-[10px]
-                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-${accentColor} hover:text-navy-deep shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.1)' : 'rgba(0,255,65,0.1)'}]
+                            ml-4 px-6 py-2.5 rounded-full border-2 border-theme-accent text-theme-accent font-bold tracking-widest uppercase text-[10px]
+                            transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent hover:bg-theme-accent hover:text-navy-deep shadow-[0_0_15px_${vibe === 'cyan' ? 'rgba(0,242,255,0.1)' : 'rgba(0,255,65,0.1)'}]
                         `}
                         style={{ animation: 'hire-me-glow 2s infinite ease-in-out' }}
                     >
@@ -107,7 +104,7 @@ const Home = () => {
                 <Contact />
             </main>
 
-            <footer className={`py-8 text-center font-mono text-xs text-slate-500 hover:text-${accentColor} transition-colors`}>
+            <footer className={`py-8 text-center font-mono text-xs text-slate-500 hover:text-theme-accent transition-colors`}>
                 <a href="https://github.com/ELMER369-code/elmerio-s-talara-portfolio" target="_blank" rel="noreferrer">
                     Designed & Built by Elmerio S. Talara
                 </a>

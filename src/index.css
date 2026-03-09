@@ -18,6 +18,7 @@
   --color-green-hacker: #00ff41;
   --color-gold-premium: #ff3e3e;
   /* Red accent for variety */
+  --color-theme-accent: var(--accent-color);
 
 
   --font-mono: "Space Mono", "Courier Prime", monospace;

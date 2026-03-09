@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { useTheme } from '../../context/ThemeContext';
 
 const MatrixBackground = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { vibe } = useTheme();
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -32,9 +30,10 @@ const MatrixBackground = () => {
             ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Matrix character color based on vibe
-            ctx.fillStyle = vibe === 'cyan' ? '#00f2ff' : '#00ff41';
+            // Matrix character color is always green as requested
+            ctx.fillStyle = '#00ff41';
             ctx.font = `${fontSize}px monospace`;
+
 
 
             for (let i = 0; i < drops.length; i++) {
