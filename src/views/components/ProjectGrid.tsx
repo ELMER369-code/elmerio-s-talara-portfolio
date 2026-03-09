@@ -1,5 +1,5 @@
 import React from 'react';
-import { useProjects } from '../src/controllers/useProjects';
+import { useProjects } from '../../controllers/useProjects';
 
 const ProjectGrid = () => {
     const { projects, loading, error, filter, setFilter, categories } = useProjects();
